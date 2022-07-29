@@ -11,15 +11,30 @@ const LOG_EVENT_MONSTER_ATTACK = "MONSTER_ATTACK";
 const LOG_EVENT_PLAYER_HEAL = "PLAYER_HEAL";
 const LOG_EVENT_GAME_OVER = "GAME_OVER";
 
-const enteredValue = prompt("Maximum life for you and the monster", "100");
-
-let chosenMaxLife = parseInt(enteredValue);
 let battleLog = [];
 let lastLoggedEntry;
 
-if (isNaN(chosenMaxLife) || chosenMaxLife <= 0) {
-  chosenMaxLife = 100;
+function getMaxLifeValues() {
+  const enteredValue = prompt("Maximum life for you and the monster", "100");
+
+  const parsedValue = parseInt(enteredValue);
+  if (isNaN(parsedValue) || parsedValue <= 0) {
+    throw { message: "Invalid user input, not a number" };
+  }
+  return parsedValue;
 }
+
+let chosenMaxLife;
+
+try {
+  chosenMaxLife = getMaxLifeValues();
+} catch (error) {
+  console.log(error);
+  chosenMaxLife = 100;
+  alert("You entered something wrong, default value is 100");
+  // throw error;
+}
+
 let currentMonsterHealth = chosenMaxLife;
 let currentPlayerHealth = chosenMaxLife;
 let hasBonusLife = true;
@@ -224,30 +239,39 @@ function printLogHandler() {
   for (let i = 0; i < 3; i++) {
     console.log("--------");
   }
-  // let j = 0;
-  // while (j < 3) {
-  //   console.log("---------");
-  //   j++;
-  // }
-  // for (let i = 10; i < 3; i++) {
-  //   i--;
-  //   console.log(i);
-  // }
-  // for (let i = 0; i < battleLog.length; i++) {
-  //   console.log(battleLog[i]);
-  // }
-  let i = 0;
-  for (const logEntry of battleLog) {
-    if ((!lastLoggedEntry && lastLoggedEntry !== 0) || lastLoggedEntry === i) {
-      console.log(`#${i}`);
-      for (const key in logEntry) {
-        console.log(`${key} => ${logEntry[key]}`);
+  let j = 0;
+  outerWhile: do {
+    console.log("outer", j);
+    innerFor: for (let k = 0; k < 5; k++) {
+      if (k === 3) {
+        break outerWhile;
       }
-      lastLoggedEntry = i;
-      break;
+      console.log("Inner", k);
     }
-    i++;
+  } while (j < 3);
+  {
+    console.log("---------");
+    j++;
   }
+  for (let i = 10; i < 3; i++) {
+    i--;
+    console.log(i);
+  }
+  for (let i = 0; i < battleLog.length; i++) {
+    console.log(battleLog[i]);
+  }
+  // let i = 0;
+  // for (const logEntry of battleLog) {
+  //   if ((!lastLoggedEntry && lastLoggedEntry !== 0) || lastLoggedEntry === i) {
+  //     console.log(`#${i}`);
+  //     for (const key in logEntry) {
+  //       console.log(`${key} => ${logEntry[key]}`);
+  //     }
+  //     lastLoggedEntry = i;
+  //     break;
+  //   }
+  //   i++;
+  // }
 
   console.log(battleLog);
 }
